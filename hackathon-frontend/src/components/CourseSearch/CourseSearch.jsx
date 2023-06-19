@@ -1,44 +1,51 @@
-import { Button, Container, TextField, Typography } from '@material-ui/core'
-import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn'
-import { Redirect } from 'react-router-dom'
-import { useState } from 'react'
-import { Playlist } from './Playlist'
-import api from '../../api'
-import './CourseSearch.css'
+import { useState } from 'react';
+import { useNavigate} from 'react-router-dom';
+import { Button, Container, TextField, Typography } from '@mui/material';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import Playlist from './Playlist';
+import api from '../../api';
+import './CourseSearch.css';
 
 function CourseSearch() {
-  const [query, setQuery] = useState('')
-  const [playlists, setPlaylists] = useState({err: 0, playlists: []})
-  const [gotResults, setGotResults] = useState(false)
+  const navigate = useNavigate()
+  const [query, setQuery] = useState('');
+  const [playlists, setPlaylists] = useState({ err: 0, playlists: [] });
+  const [gotResults, setGotResults] = useState(false);
 
-  var onQueryChange = (e) => {
-    setQuery(e.target.value)
-  }
-  var getResultsKey = (e) => {
-    if (e.code === 'Enter')
-      getResults(e)
-  }
-  var getResults = (e) => {
-    console.log('Querying for \'' + query + '\'')
-    api.sendQuery(query).then(lists => {
+  const onQueryChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const getResultsKey = (e) => {
+    if (e.code === 'Enter') {
+      getResults(e);
+    }
+  };
+
+  const getResults = (e) => {
+    console.log('Querying for \'' + query + '\'');
+    api.sendQuery(query).then((lists) => {
       if (lists.status < 400) {
-        setPlaylists(lists.data)
+        setPlaylists(lists.data);
+      } else {
+        setPlaylists({ err: 1, playlists: [] });
+        console.log('failed');
       }
-      else {
-        setPlaylists({ err: 1, playlists: []})
-        console.log('failed')
-      }
-      setGotResults(true)
-    })
-  }
+      setGotResults(true);
+    });
+  };
+
+  const redirectToCourses = () => {
+    navigate('/courses');
+  };
 
   return (
     <div>
-      {(gotResults) ? <Redirect to='/courses'/> : <p></p>}
+      {gotResults ? redirectToCourses() : <p></p>}
       <div className='title'>
         <Container>
           <Typography variant='h6'>What do you want to learn about today?</Typography>
-          <TextField onChange={onQueryChange} onKeyPress={getResultsKey} id='finder'/>
+          <TextField onChange={onQueryChange} onKeyPress={getResultsKey} id='finder' />
           <Button onClick={getResults}><KeyboardReturnIcon /></Button>
         </Container>
         {playlists.err === 0 ? 
@@ -49,15 +56,15 @@ function CourseSearch() {
       <div className='courses'>
         <Container>
           <table>
-            {/*playlists.playlists.map(playlist => {
-              console.log(playlist)
-              return (<Playlist playlist={playlist}/>)
-            })*/}
+            {/* {playlists.playlists.map((playlist) => {
+              console.log(playlist);
+              return (<Playlist key={playlist.id} playlist={playlist} />);
+            })} */}
           </table>
         </Container>
       </div>
     </div>
-  )
+  );
 }
 
 export default CourseSearch;

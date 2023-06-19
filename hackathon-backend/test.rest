@@ -1,2 +1,12 @@
-GET http://localhost:3000/api
+GET http://localhost:3000/auth
 Content-Type: application/json
+
+#####
+POST http://localhost:3000/api/gen/:topic
+
+Content-Type: application/json
+
+{
+    "user":"frimpsup@gmail.com",
+    "topic":"software engineering"
+}

@@ -1,5 +1,10 @@
-import { Card, CardContent, CardActions, Button, Typography } from "@material-ui/core"
-import { makeStyles } from '@material-ui/core/styles';
+// import { Card, CardContent, CardActions, Button, Typography } from "@material-ui/core"
+import  Card  from '@mui/material/Card';
+import  CardActions  from '@mui/material/CardActions';
+import  CardContent  from '@mui/material/CardContent';
+import Typography  from '@mui/material/Typography';
+import  Button  from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
 import './Courses.css'
 
 const useStyles = makeStyles({
